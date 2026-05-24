@@ -12,9 +12,7 @@ interface Props {
 const CATEGORIES = ["Electronics", "Accessories", "Furniture", "Clothing", "Food", "Other"];
 
 export default function AddProductModal({ open, onClose, onAdd }: Props) {
-  const [form, setForm] = useState({
-    name: "", category: "", quantity: "", price: "", image: "",
-  });
+  const [form, setForm] = useState({ name: "", category: "", quantity: "", price: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -35,7 +33,6 @@ export default function AddProductModal({ open, onClose, onAdd }: Props) {
       const reader = new FileReader();
       reader.onload = () => setPreview(reader.result as string);
       reader.readAsDataURL(file);
-      setForm({ ...form, image: file.name });
     }
   }
 
@@ -48,10 +45,10 @@ export default function AddProductModal({ open, onClose, onAdd }: Props) {
       category: form.category,
       quantity: Number(form.quantity),
       price: Number(form.price),
-      image: preview || `https://ui-avatars.com/api/?name=${form.name}&background=6366f1&color=fff`,
+      image: preview || `https://ui-avatars.com/api/?name=${encodeURIComponent(form.name)}&background=6366f1&color=fff`,
       status: Number(form.quantity) > 10 ? "In Stock" : Number(form.quantity) > 0 ? "Low Stock" : "Out of Stock",
     });
-    setForm({ name: "", category: "", quantity: "", price: "", image: "" });
+    setForm({ name: "", category: "", quantity: "", price: "" });
     setPreview(null);
     setErrors({});
     onClose();
@@ -60,15 +57,15 @@ export default function AddProductModal({ open, onClose, onAdd }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-lg rounded-2xl bg-popover border border-border shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Add New Product</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <X className="h-5 w-5 text-gray-500" />
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <h2 className="text-lg font-semibold text-foreground">Add New Product</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+            <X className="h-5 w-5 text-muted-foreground" />
           </button>
         </div>
 
@@ -77,13 +74,13 @@ export default function AddProductModal({ open, onClose, onAdd }: Props) {
           {/* Image Upload */}
           <div className="flex justify-center">
             <label className="cursor-pointer group">
-              <div className="h-20 w-20 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden group-hover:border-indigo-500 transition-colors">
+              <div className="h-20 w-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center overflow-hidden group-hover:border-primary transition-colors">
                 {preview ? (
                   <img src={preview} className="h-full w-full object-cover" alt="preview" />
                 ) : (
                   <div className="flex flex-col items-center gap-1">
-                    <Upload className="h-6 w-6 text-gray-400" />
-                    <span className="text-xs text-gray-400">Upload</span>
+                    <Upload className="h-6 w-6 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">Upload</span>
                   </div>
                 )}
               </div>
@@ -93,69 +90,69 @@ export default function AddProductModal({ open, onClose, onAdd }: Props) {
 
           {/* Product Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Product Name</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Product Name</label>
             <input
               type="text"
               placeholder="e.g. Wireless Mouse"
               value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             />
-            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
+            {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Category</label>
             <select
               value={form.category}
               onChange={e => setForm({ ...form, category: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Select category</option>
-              {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
-            {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category}</p>}
+            {errors.category && <p className="text-xs text-destructive mt-1">{errors.category}</p>}
           </div>
 
           {/* Quantity & Price */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Quantity</label>
+              <label className="block text-sm font-medium text-foreground mb-1">Quantity</label>
               <input
                 type="number" min="0"
                 placeholder="0"
                 value={form.quantity}
                 onChange={e => setForm({ ...form, quantity: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
-              {errors.quantity && <p className="text-xs text-red-500 mt-1">{errors.quantity}</p>}
+              {errors.quantity && <p className="text-xs text-destructive mt-1">{errors.quantity}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price ($)</label>
+              <label className="block text-sm font-medium text-foreground mb-1">Price ($)</label>
               <input
                 type="number" min="0" step="0.01"
                 placeholder="0.00"
                 value={form.price}
                 onChange={e => setForm({ ...form, price: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-lg border border-border bg-muted text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
-              {errors.price && <p className="text-xs text-red-500 mt-1">{errors.price}</p>}
+              {errors.price && <p className="text-xs text-destructive mt-1">{errors.price}</p>}
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-foreground rounded-lg border border-border hover:bg-muted transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
           >
             Add Product
           </button>
