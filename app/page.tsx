@@ -1,5 +1,5 @@
-import ProductTable from '@/components/inventory/ProductTable'
+import { DashboardContent } from "@/components/dashboard/dashboard-content"
 
 export default function Home() {
-  return <ProductTable />
+  return <DashboardContent />
 }

@@ -24,21 +24,20 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: LayoutDashboard },
-  { name: "Products", href: "#products", icon: Package },
-  { name: "Orders", href: "#orders", icon: ShoppingCart },
-  { name: "Reports", href: "#reports", icon: BarChart3 },
-  { name: "Settings", href: "#settings", icon: Settings },
+  { name: "Products", href: "#", icon: Package },
+  { name: "Orders", href: "#", icon: ShoppingCart },
+  { name: "Reports", href: "#", icon: BarChart3 },
+  { name: "Settings", href: "#", icon: Settings },
 ]
 
 interface SidebarProps {
   isOpen: boolean
   setIsOpen: (open: boolean) => void
+  activeItem: string
+  setActiveItem: (item: string) => void
 }
-
-export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+export function Sidebar({ isOpen, setIsOpen, activeItem, setActiveItem }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
-  const [activeItem, setActiveItem] = useState("Dashboard")
-
   return (
     <TooltipProvider delayDuration={0}>
       {/* Mobile overlay */}
