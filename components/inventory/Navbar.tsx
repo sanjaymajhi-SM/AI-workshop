@@ -2,20 +2,20 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Search, Bell, Sun, Moon, ChevronDown, User, Settings, LogOut } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export default function Navbar() {
-  const [dark, setDark] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
         setDropdownOpen(false);
         setNotifOpen(false);
       }
@@ -28,6 +28,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
+
           {/* Logo */}
           <div className="flex items-center gap-2 shrink-0">
             <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center">
@@ -51,14 +52,17 @@ export default function Navbar() {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-2" ref={dropdownRef}>
+          <div className="flex items-center gap-2" ref={ref}>
+
             {/* Dark mode toggle */}
-            <button
-              onClick={() => setDark(!dark)}
-              className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+            )}
 
             {/* Notifications */}
             <div className="relative">
