@@ -1,5 +1,5 @@
-import { DashboardContent } from "@/components/dashboard/dashboard-content"
+import ProductTable from '@/components/inventory/ProductTable'
 
-export default function Page() {
-  return <DashboardContent />
+export default function Home() {
+  return <ProductTable />
 }
