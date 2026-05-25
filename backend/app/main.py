@@ -7,6 +7,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from .database import init_db
 from .routes.product_routes import router as product_router
 
+# 1. FastAPI is already initialized here (with better metadata!)
 app = FastAPI(
     title="Inventory Management API",
     version="1.0.0",
@@ -21,6 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 2. The router is already included here!
 app.include_router(product_router)
 
 
@@ -29,6 +31,7 @@ def on_startup() -> None:
     init_db()
 
 
+# 3. The home route is already here!
 @app.get("/")
 def home() -> dict:
     return {"message": "Inventory API Running"}

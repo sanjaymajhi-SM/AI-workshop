@@ -1,51 +1,82 @@
-from typing import List
-
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.orm import Session
-
-from ..database import SessionLocal
-from ..schemas.product import ProductCreate, ProductRead, ProductUpdate
-from ..services.product_service import (
-    create_product,
-    delete_product,
-    get_product,
-    list_products,
-    update_product,
-)
+from fastapi import APIRouter
+from app.schemas.product_schema import Product
+from app.database.supabase import supabase
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# GET ALL PRODUCTS
+@router.get("/")
+def get_products():
+    response = supabase.table("products").select("*").execute()
+    return response.data
 
 
-@router.get("/", response_model=List[ProductRead])
-def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return list_products(db, skip=skip, limit=limit)
+# GET SINGLE PRODUCT (optional but useful)
+@router.get("/{product_id}")
+def get_product(product_id: int):
+    response = (
+        supabase.table("products")
+        .select("*")
+        .eq("id", product_id)
+        .execute()
+    )
+    return response.data
 
 
-@router.get("/{product_id}", response_model=ProductRead)
-def read_product(product_id: int, db: Session = Depends(get_db)):
-    return get_product(db, product_id)
+# CREATE PRODUCT
+@router.post("/")
+def create_product(product: Product):
+
+    data = {
+        "name": product.name,
+        "quantity": product.quantity,
+        "price": product.price
+    }
+
+    response = supabase.table("products").insert(data).execute()
+
+    return {
+        "message": "Product added successfully",
+        "data": response.data
+    }
 
 
-@router.post("/", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
-def create_new_product(payload: ProductCreate, db: Session = Depends(get_db)):
-    return create_product(db, payload)
+# UPDATE PRODUCT
+@router.put("/{product_id}")
+def update_product(product_id: int, product: Product):
+
+    data = {
+        "name": product.name,
+        "quantity": product.quantity,
+        "price": product.price
+    }
+
+    response = (
+        supabase.table("products")
+        .update(data)
+        .eq("id", product_id)
+        .execute()
+    )
+
+    return {
+        "message": "Product updated successfully",
+        "data": response.data
+    }
 
 
-@router.put("/{product_id}", response_model=ProductRead)
-def update_existing_product(
-    product_id: int, payload: ProductUpdate, db: Session = Depends(get_db)
-):
-    return update_product(db, product_id, payload)
+# DELETE PRODUCT
+@router.delete("/{product_id}")
+def delete_product(product_id: int):
 
+    response = (
+        supabase.table("products")
+        .delete()
+        .eq("id", product_id)
+        .execute()
+    )
 
-@router.delete("/{product_id}", response_model=ProductRead)
-def delete_existing_product(product_id: int, db: Session = Depends(get_db)):
-    return delete_product(db, product_id)
+    return {
+        "message": "Product deleted successfully",
+        "data": response.data
+    }

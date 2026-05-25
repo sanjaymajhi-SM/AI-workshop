@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field, conint, confloat
+from pydantic import BaseModel, ConfigDict, Field, conint, confloat
 
 
 class ProductBase(BaseModel):
@@ -25,9 +25,8 @@ class ProductUpdate(BaseModel):
 
 
 class ProductRead(ProductBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        orm_mode = True

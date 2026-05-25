@@ -22,7 +22,7 @@ def get_product(db: Session, product_id: int) -> Optional[Product]:
 
 
 def create_product(db: Session, payload: ProductCreate) -> Product:
-    product = Product(**payload.dict())
+    product = Product(**payload.model_dump())
     db.add(product)
     db.commit()
     db.refresh(product)
@@ -31,7 +31,7 @@ def create_product(db: Session, payload: ProductCreate) -> Product:
 
 def update_product(db: Session, product_id: int, payload: ProductUpdate) -> Product:
     product = get_product(db, product_id)
-    for field, value in payload.dict(exclude_unset=True).items():
+    for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(product, field, value)
     db.add(product)
     db.commit()
