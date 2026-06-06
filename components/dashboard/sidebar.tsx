@@ -23,11 +23,11 @@ import {
 } from "@/components/ui/tooltip"
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: LayoutDashboard },
-  { name: "Products", href: "#", icon: Package },
-  { name: "Orders", href: "#", icon: ShoppingCart },
-  { name: "Reports", href: "#", icon: BarChart3 },
-  { name: "Settings", href: "#", icon: Settings },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Products", href: "/products", icon: Package },
+  { name: "Orders", href: "/orders", icon: ShoppingCart },
+  { name: "Reports", href: "/reports", icon: BarChart3 },
+  { name: "Settings", href: "/settings", icon: Settings },
 ]
 
 interface SidebarProps {

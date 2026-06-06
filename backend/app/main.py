@@ -6,6 +6,9 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from .database import init_db
 from .routes.product_routes import router as product_router
+from .routes.orders_routes import router as orders_router
+from .routes.reports_routes import router as reports_router
+from .routes.settings_routes import router as settings_router
 
 # 1. FastAPI is already initialized here (with better metadata!)
 app = FastAPI(
@@ -24,6 +27,9 @@ app.add_middleware(
 
 # 2. The router is already included here!
 app.include_router(product_router)
+app.include_router(orders_router)
+app.include_router(reports_router)
+app.include_router(settings_router)
 
 
 @app.on_event("startup")
