@@ -14,6 +14,6 @@ Base = declarative_base()
 
 def init_db() -> None:
     """Create database tables on startup."""
-    from ..models import product  # noqa: F401
+    from ..models import product, order, settings  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

@@ -36,18 +36,18 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">Settings</h1>
+    <div className="py-6 px-6">
+      <h1 className="text-2xl font-bold mb-4">Settings</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="space-y-4 max-w-md">
+        <div className="rounded-xl border border-border bg-card p-6 max-w-md space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Theme</label>
             <select
               value={settings.theme}
               onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
-              className="w-full rounded-md border p-2"
+              className="w-full rounded-md border p-2 bg-background"
             >
               <option value="light">Light</option>
               <option value="dark">Dark</option>

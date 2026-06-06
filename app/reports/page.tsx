@@ -22,15 +22,24 @@ export default function ReportsPage() {
   }, [])
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">Sales Report</h1>
+    <div className="py-6 px-6">
+      <h1 className="text-2xl font-bold mb-4">Sales Report</h1>
       {loading ? (
         <p>Loading...</p>
       ) : report ? (
-        <div className="space-y-2">
-          <div>Total Orders: {report.total_orders}</div>
-          <div>Total Sales: ${report.total_sales}</div>
-          <div>Total Items: {report.total_items}</div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="rounded-xl border border-border bg-card p-4">
+            <p className="text-sm text-muted-foreground">Total Orders</p>
+            <p className="text-2xl font-semibold">{report.total_orders}</p>
+          </div>
+          <div className="rounded-xl border border-border bg-card p-4">
+            <p className="text-sm text-muted-foreground">Total Sales</p>
+            <p className="text-2xl font-semibold">${report.total_sales}</p>
+          </div>
+          <div className="rounded-xl border border-border bg-card p-4">
+            <p className="text-sm text-muted-foreground">Total Items</p>
+            <p className="text-2xl font-semibold">{report.total_items}</p>
+          </div>
         </div>
       ) : (
         <p>No report data</p>
